@@ -28,13 +28,23 @@ pipeline{
             defaultValue: params.tag ?: '',
             description: ''
         )
+        string(
+            name: 'repo_url',
+            defaultValue: params.repo_url ?: '',
+            description: ''
+        )
+        string(
+            name: 'credentials',
+            defaultValue: params.credentials ?: '',
+            description: ''
+        )
     }
     stages{
         stage('Checkout') {
             steps {
                 git branch: params.branch, 
-                    url: 'https://github.com/cherpin00/compass-scraping',
-                    credentialsId: '4da91a3b-816d-48c0-8aa0-ce7e11e13243'
+                    url: params.repo_url,
+                    credentialsId: params.credentials
             }
         }
         stage('Docker Build') {
