@@ -28,6 +28,7 @@ pipeline{
             defaultValue: params.tag ?: '',
             description: ''
         )
+    }
     stages{
         stage('Checkout') {
             steps {
