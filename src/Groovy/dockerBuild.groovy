@@ -30,18 +30,18 @@ pipeline{
                     }
                     
                     // Build the Docker image
-                    def image = docker.build("docker.io/cherpin/$IMAGE_NAME:$TAG", "frontend/")
+                    sh 'cd frontend; docker build . -t docker.io/cherpin/$IMAGE_NAME:$TAG'
                     
                     // Push the image to the Docker registry
-                    image.push()
+                    //image.push()
                 }
             }
         }
-        // stage('Docker Push') {
-        //     steps {
-        //         sh 'docker push docker.io/cherpin/$IMAGE_NAME:$TAG'
-        //     }
-        // }
+        stage('Docker Push') {
+            steps {
+                sh 'docker push docker.io/cherpin/$IMAGE_NAME:$TAG'
+            }
+        }
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
