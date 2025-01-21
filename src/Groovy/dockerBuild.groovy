@@ -23,8 +23,8 @@ pipeline{
         }
         stage('Docker Build and Push') {
             steps {
-                scripts{
-                    //sh 'cd frontend; docker build . -t docker.io/cherpin/$IMAGE_NAME:$TAG'
+                script {
+                    // Log in to Docker registry and build & push the image
                     docker.withRegistry('https://docker.io', credentials('99111882-3344-4a8c-8fad-210eaa927c77')) {
                         def image = docker.build("docker.io/cherpin/$IMAGE_NAME:$TAG", "frontend/")
                         image.push()
