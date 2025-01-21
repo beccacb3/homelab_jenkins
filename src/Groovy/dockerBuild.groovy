@@ -8,7 +8,7 @@ pipeline{
         }
     }
     stages{
-        stage{
+        stage('Test'){
             steps{
                 script{
                     //TODO plugin github
