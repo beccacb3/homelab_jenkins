@@ -5,7 +5,7 @@ metadata:
     some-label: dind
 spec:
   containers:
-    -name: shell
+    - name: shell
       image: docker: 20.10.24-dind
       command:
         - sh
