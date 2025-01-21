@@ -4,7 +4,7 @@ pipeline{
     agent {
         kubernetes {
             yamlFile 'src/Operations/Kubernetes/dind.yaml'
-            defaultContainer: 'shell'
+            defaultContainer 'shell'
         }
     }
     stages{
