@@ -15,17 +15,17 @@ pipeline{
     parameters {
         string(
             name: 'image_name',
-            defaultValue: params.image_name ? : '',
+            defaultValue: params.image_name ?: '',
             description: ''
         )
         string(
             name: 'branch',
-            defaultValue: params.branch ? : '',
+            defaultValue: params.branch ?: '',
             description: ''
         )
         string(
             name: 'tag',
-            defaultValue: params.tag ? : '',
+            defaultValue: params.tag ?: '',
             description: ''
         )
     stages{
