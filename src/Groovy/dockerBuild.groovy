@@ -21,16 +21,22 @@ pipeline{
                     credentialsId: '4da91a3b-816d-48c0-8aa0-ce7e11e13243'
             }
         }
-        stage('Docker Build') {
+        stage('Docker Build and Push') {
             steps {
-                sh 'cd frontend; docker build . -t docker.io/cherpin/$IMAGE_NAME:$TAG'
+                scripts{
+                    //sh 'cd frontend; docker build . -t docker.io/cherpin/$IMAGE_NAME:$TAG'
+                    docker.withRegistry('https://docker.io', credentials('99111882-3344-4a8c-8fad-210eaa927c77')) {
+                        def image = docker.build("docker.io/cherpin/$IMAGE_NAME:$TAG", "frontend/")
+                        image.push()
+                    }
+                }
             }
         }
-        stage('Docker Push') {
-            steps {
-                sh 'docker push docker.io/cherpin/$IMAGE_NAME:$TAG'
-            }
-        }
+        // stage('Docker Push') {
+        //     steps {
+        //         sh 'docker push docker.io/cherpin/$IMAGE_NAME:$TAG'
+        //     }
+        // }
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
