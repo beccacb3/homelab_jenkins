@@ -37,7 +37,7 @@ pipeline{
                     credentialsId: '4da91a3b-816d-48c0-8aa0-ce7e11e13243'
             }
         }
-        stage('Docker Build and Push') {
+        stage('Docker Build') {
             steps {
                 script {
                     def tag = "${params.branch}-${env.BUILD_NUMBER}"
