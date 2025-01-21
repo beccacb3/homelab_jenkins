@@ -24,11 +24,16 @@ pipeline{
         stage('Docker Build and Push') {
             steps {
                 script {
-                    // Log in to Docker registry and build & push the image
-                    docker.withRegistry('https://docker.io', credentials('99111882-3344-4a8c-8fad-210eaa927c77')) {
-                        def image = docker.build("docker.io/cherpin/$IMAGE_NAME:$TAG", "frontend/")
-                        image.push()
+                    // Log in to Docker registry using credentials stored in Jenkins
+                    withCredentials([usernamePassword(credentialsId: 'docker-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                     }
+                    
+                    // Build the Docker image
+                    def image = docker.build("docker.io/cherpin/$IMAGE_NAME:$TAG", "frontend/")
+                    
+                    // Push the image to the Docker registry
+                    image.push()
                 }
             }
         }
