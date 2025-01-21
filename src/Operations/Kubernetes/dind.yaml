@@ -15,7 +15,7 @@ spec:
           dockerd-entrypoint.sh & \
           sleep infinity
       tty: true
-      securityContent:
+      securityContext:
         privileged: true
       env:
         - name: DOCKER_TLS_CERTDIR
