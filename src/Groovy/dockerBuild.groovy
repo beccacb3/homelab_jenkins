@@ -13,20 +13,21 @@ pipeline{
     //     TAG = "${env.BRANCH}-${env.BUILD_NUMBER}"
     // }
     parameters {
-        string: 'image_name',
-        defaultValue: params.image_name ? : '',
-        description: ''
-    }
-    parameters {
-        string: 'branch',
-        defaultValue: params.branch ? : '',
-        description: ''
-    }
-    parameters {
-        string: 'tag',
-        defaultValue: params.tag ? : '',
-        description: ''
-    }
+        string(
+            name: 'image_name',
+            defaultValue: params.image_name ? : '',
+            description: ''
+        )
+        string(
+            name: 'branch',
+            defaultValue: params.branch ? : '',
+            description: ''
+        )
+        string(
+            name: 'tag',
+            defaultValue: params.tag ? : '',
+            description: ''
+        )
     stages{
         stage('Checkout') {
             steps {
