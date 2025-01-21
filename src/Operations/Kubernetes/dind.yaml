@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
     - name: shell
-      image: docker: 20.10.24-dind
+      image: docker:20.10.24-dind
       command:
         - sh
         - -c
