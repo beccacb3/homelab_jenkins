@@ -56,14 +56,14 @@ pipeline{
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                     }
                     sh """
-                        cd \$(dirname ${params.dockerfile_path}) && docker build -f \$(basename ${params.dockerfile_path}) . -t docker.io/cherpin/${params.image_name}:${tag}
+                        cd \$(dirname ${params.dockerfile_path}) && docker build -f \$(basename ${params.dockerfile_path}) . -t docker.io/cherpin/${params.image_name}:${params.tag}
                     """
                 }
             }
         }
         stage('Docker Push') {
             steps {
-                sh "docker push docker.io/cherpin/${image_name}:${tag}"
+                sh "docker push docker.io/cherpin/${image_name}:${params.tag}"
             }
         }
     }
