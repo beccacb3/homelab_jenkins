@@ -45,6 +45,11 @@ pipeline{
         )
     }
     stages{
+        stage('Check known docker repository for credentials'){
+            if(params.docker_repo.contains("docker.io/cherpin")){
+                params.credentials = "a453e044-6a68-4edb-a82e-b26ffe9054af"
+            }
+        }
         stage('Checkout') {
             steps {
                 git branch: params.branch, 
@@ -57,7 +62,7 @@ pipeline{
                 script {
                     sh "ls"
                     def tag = "${params.branch}-${env.BUILD_NUMBER}"
-                    withCredentials([usernamePassword(credentialsId: 'a453e044-6a68-4edb-a82e-b26ffe9054af', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: ${params.credentials}, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                     }
                     sh """
