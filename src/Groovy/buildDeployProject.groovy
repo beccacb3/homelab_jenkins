@@ -1,3 +1,5 @@
+@Library('homelab_jenkins@main') _ 
+
 // def github_repo = "https://github.com/cherpin00/compass-scraping"
 // def branch = "development"
 // def image_name = "realestate-app-dev"
@@ -23,7 +25,7 @@ pipeline {
                 script {
                     print(env.JOB_NAME)
                     // Load the configuration dynamically based on the pipeline name
-                    def config = projectConfigs(env.JOB_NAME.split('_')[1])
+                    def config = projectConfigs(env.JOB_NAME.split('_')[0])
                     
                     // Use the configuration in your pipeline
                     def github_repo = config.github_repo
