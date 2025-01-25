@@ -59,16 +59,16 @@ pipeline{
                     print("Check Docker Repo Credentials")
                     credentials = params.docker_credentials
                     if(params.docker_repo.contains("docker.io/cherpin")){
-                        docker_credentials = "4da91a3b-816d-48c0-8aa0-ce7e11e13243"
+                        docker_credentials = "a453e044-6a68-4edb-a82e-b26ffe9054af"
                     }
                     print("Docker Credentials set to: ${docker_credentials}")
                     
                     print("Check Github Repo Credentials")
-                    credentials = params.docker_credentials
-                    if(params.docker_repo.contains("cherpin")){
-                        github_credentials = "a453e044-6a68-4edb-a82e-b26ffe9054af"
+                    credentials = params.github_credentials
+                    if(params.github_repo.contains("cherpin")){
+                        github_credentials = "4da91a3b-816d-48c0-8aa0-ce7e11e13243"
                     }
-                    print("Docker Credentials set to: ${github_credentials}")
+                    print("Github Credentials set to: ${github_credentials}")
                 }
             }
         }
