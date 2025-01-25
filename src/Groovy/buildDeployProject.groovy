@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     // Load the configuration dynamically based on the pipeline name
-                    def config = loadConfig(params.pipeline_name.split('_')[1])
+                    def config = projectConfigs(params.pipeline_name.split('_')[1])
                     
                     // Use the configuration in your pipeline
                     def github_repo = config.github_repo
