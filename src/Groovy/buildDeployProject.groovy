@@ -16,11 +16,11 @@ pipeline {
             defaultContainer 'build-and-deploy'
         }
     }
-    // environment {
-    //     IMAGE_NAME = 'realestate-app'
-    //     BRANCH = 'development'
-    //     TAG = "${env.BRANCH}-${env.BUILD_NUMBER}"
-    // }
+    environment {
+        IMAGE_NAME = 'realestate-app'
+        BRANCH = 'development'
+        TAG = "${env.BRANCH}-${env.BUILD_NUMBER}"
+    }
     stages {
         // stage('Checkout') {
         //     steps {
@@ -75,11 +75,11 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-		        sh """
-                kubectl set image deployment/${project_name} \
-                    ${project_name}=${github_repo}/${image_name}:${tag} -n ${app_name}
-                kubectl rollout status deployment/${project_name} -n ${app_name}
-                """
+		        sh '''
+                kubectl set image deployment/react-app \
+                    react-app=cherpin/$IMAGE_NAME:$TAG -n realestate-app-dev
+                kubectl rollout status deployment/react-app -n realestate-app-dev
+                '''
                 }
             }
         }
