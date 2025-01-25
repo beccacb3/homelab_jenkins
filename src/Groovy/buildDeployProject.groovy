@@ -57,9 +57,9 @@ pipeline {
                         branch = "master"
                     }
 
-                    tag = ${env.BRANCH}-${env.BUILD_NUMBER}
+                    tag = "${env.BRANCH}-${env.BUILD_NUMBER}"
 
-                    echo "Building Docker image ${image_name}:${env.tag} from ${github_repo} on branch ${branch}"
+                    echo "Building Docker image ${image_name}:${tag} from ${github_repo} on branch ${branch}"
                 }
             }
         }
