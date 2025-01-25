@@ -20,6 +20,7 @@ def call(String pipelineName) {
     // Load the configuration based on the pipeline name
     if (pipelineConfigs.containsKey(pipelineName)) {
         config = pipelineConfigs[pipelineName]
+        print("Found config ${config}")
     } else {
         error "Pipeline name '${pipelineName}' is not defined in configuration."
     }
