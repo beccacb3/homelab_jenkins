@@ -66,7 +66,7 @@ pipeline {
         stage('Call Docker Build/Upload Pipeline') {
             steps {
                 script{
-                    build job: 'docker_image_build', // Name of the downstream pipeline (Pipeline B)
+                    def triggerResult = build job: 'docker_image_build', // Name of the downstream pipeline (Pipeline B)
                         parameters: [
                             string(name: 'github_repo', value: github_repo),
                             string(name: 'branch', value: branch),
@@ -77,6 +77,12 @@ pipeline {
                             string(name: 'dockerfile_path', value: dockerfile_path),
                             string(name: 'docker_repo', value: docker_repo),
                         ]
+                    
+                    if (triggerResult.result == 'FAILURE') {
+                        error "Downstream pipeline failed! Marking this stage as failure."
+                    } else {
+                        echo "Downstream pipeline succeeded!"
+                    }
                 }
             }
         }
