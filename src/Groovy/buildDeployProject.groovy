@@ -16,11 +16,11 @@ pipeline {
             defaultContainer 'build-and-deploy'
         }
     }
-    environment {
-        IMAGE_NAME = 'realestate-app'
-        BRANCH = 'development'
-        TAG = "${env.BRANCH}-${env.BUILD_NUMBER}"
-    }
+    // environment {
+    //     IMAGE_NAME = 'realestate-app'
+    //     BRANCH = 'development'
+    //     TAG = "${env.BRANCH}-${env.BUILD_NUMBER}"
+    // }
     stages {
         stage('Checkout') {
             steps {
