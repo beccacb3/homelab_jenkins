@@ -2,12 +2,13 @@ def github_repo = "https://github.com/cherpin00/compass-scraping"
 def branch = "development"
 def image_name = "realestate-app-dev"
 def tag = "test"
-def docker_credentials = ""
-def github_credentials = ""
 def dockerfile_path = "frontend/Dockerfile"
 def docker_repo = "docker.io/cherpin"
 def project_name = "react-app"
 def app_name = "realestate-app-dev"
+
+def docker_credentials = ""
+def github_credentials = ""
 
 pipeline {
     agent {
@@ -17,6 +18,27 @@ pipeline {
         }
     }
     stages {
+        stage('Load Config') {
+            steps {
+                script {
+                    // Load the configuration dynamically based on the pipeline name
+                    def config = loadConfig(params.pipeline_name.split('_')[1])
+                    
+                    // Use the configuration in your pipeline
+                    def github_repo = config.github_repo
+                    def branch = config.branch
+                    def image_name = config.image_name
+                    def tag = config.tag
+                    def dockerfile_path = config.dockerfile_path
+                    def docker_repo = config.docker_repo
+                    def project_name = config.project_name
+                    def app_name = config.app_name
+
+                    //Docker information
+                    echo "Building Docker image ${image_name}:${tag} from ${github_repo} on branch ${branch}"
+                }
+            }
+        }
         stage('Call Docker Build/Upload Pipeline') {
             steps {
                 script{
