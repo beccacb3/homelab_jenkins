@@ -54,14 +54,17 @@ pipeline{
                     if(params.docker_repo.contains("docker.io/cherpin")){
                         credentials = "a453e044-6a68-4edb-a82e-b26ffe9054af"
                     }
+                    echo ${credentials}
                 }
             }
         }
         stage('Checkout') {
             steps {
+                script {
                 git branch: params.branch, 
                     url: params.github_repo,
-                    credentialsId: params.credentials
+                    credentialsId: ${credentials}
+                }
             }
         }
         stage('Docker Build') {
