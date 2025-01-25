@@ -9,6 +9,7 @@ def project_name = ""
 def app_name = ""
 def github_credentials = ""
 def docker_credentials = ""
+def tag = ""
 
 pipeline {
     agent {
@@ -23,9 +24,6 @@ pipeline {
             defaultValue: params.github_repo ?: '',
             description: 'Branch if it differs from development or master'
         )
-    }
-    environment {
-        tag = "${env.BRANCH}-${env.BUILD_NUMBER}"
     }
     stages {
         stage('Load Config') {
@@ -47,17 +45,19 @@ pipeline {
                     github_credentials = config.github_credentials
                     docker_credentials = config.docker_credentials
 
-                    if(split_JOB_NAME[2] == "dev"){
+                    if(params.branch != ''){
+                        branch = params.branch
+                    }
+                    else if(split_JOB_NAME[2] == "dev"){
                         app_name = "${app_name}-dev"
                         image_name = "${image_name}-dev"
                         branch = "development"
                     }
-                    if(params.branch != ''){
-                        branch = params.branch
-                    }
                     else {
                         branch = "master"
                     }
+
+                    tag = ${env.BRANCH}-${env.BUILD_NUMBER}
 
                     echo "Building Docker image ${image_name}:${env.tag} from ${github_repo} on branch ${branch}"
                 }
@@ -71,7 +71,7 @@ pipeline {
                             string(name: 'github_repo', value: github_repo),
                             string(name: 'branch', value: branch),
                             string(name: 'image_name', value: image_name),
-                            string(name: 'tag', value: env.tag),
+                            string(name: 'tag', value: tag),
                             string(name: 'docker_credentials', value: ""),
                             string(name: 'github_credentials', value: ""),
                             string(name: 'dockerfile_path', value: dockerfile_path),
@@ -85,7 +85,7 @@ pipeline {
                 script {
 		        sh """
                 kubectl set image deployment/${project_name} \
-                    ${project_name}=cherpin/${image_name}:$tag -n ${app_name}
+                    ${project_name}=cherpin/${image_name}:${tag} -n ${app_name}
                 kubectl rollout status deployment/${project_name} -n ${app_name}
                 """
                 }
