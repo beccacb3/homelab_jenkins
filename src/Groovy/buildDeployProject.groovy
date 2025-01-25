@@ -22,13 +22,13 @@ pipeline {
     //     TAG = "${env.BRANCH}-${env.BUILD_NUMBER}"
     // }
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: env.BRANCH, 
-                    url: 'https://github.com/cherpin00/compass-scraping',
-                    credentialsId: '4da91a3b-816d-48c0-8aa0-ce7e11e13243'
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         git branch: env.BRANCH, 
+        //             url: 'https://github.com/cherpin00/compass-scraping',
+        //             credentialsId: '4da91a3b-816d-48c0-8aa0-ce7e11e13243'
+        //     }
+        // }
         // stage('Docker Login') {
         //     steps {
         //         withCredentials([usernamePassword(credentialsId: 'a453e044-6a68-4edb-a82e-b26ffe9054af', 
@@ -48,13 +48,13 @@ pipeline {
         //         sh 'podman push docker.io/cherpin/$IMAGE_NAME:$TAG'
         //     }
         // }
-        stage('Configure Project Parameters') {
-            steps {
-                script {
-                    github_repo 
-                }
-            }
-        }
+        // stage('Configure Project Parameters') {
+        //     steps {
+        //         script {
+        //             github_repo 
+        //         }
+        //     }
+        // }
         stage('Call Docker Build/Upload Pipeline') {
             steps {
                 script{
