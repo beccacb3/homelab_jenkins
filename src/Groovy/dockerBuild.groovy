@@ -1,6 +1,7 @@
 @Library('homelab_jenkins@main') _ 
 
-def credentials = ''
+def docker_credentials = ''
+def github_credentials = ''
 
 pipeline{
     agent {
@@ -31,7 +32,12 @@ pipeline{
             description: 'Tag for the docker image'
         )
         string(
-            name: 'credentials',
+            name: 'docker_credentials',
+            defaultValue: params.credentials ?: '',
+            description: 'Credentials for pushing to dockerhub'
+        )
+        string(
+            name: 'github_credentials',
             defaultValue: params.credentials ?: '',
             description: 'Credentials for pushing to dockerhub'
         )
@@ -47,14 +53,22 @@ pipeline{
         )
     }
     stages{
-        stage('Check known docker credentials'){
+        stage('Check known credentials'){
             steps{
                 script{
-                    credentials = params.credentials
+                    print("Check Docker Repo Credentials")
+                    credentials = params.docker_credentials
                     if(params.docker_repo.contains("docker.io/cherpin")){
-                        credentials = "4da91a3b-816d-48c0-8aa0-ce7e11e13243"
+                        docker_credentials = "4da91a3b-816d-48c0-8aa0-ce7e11e13243"
                     }
-                    echo ${credentials}
+                    print("Docker Credentials set to: ${docker_credentials}")
+                    
+                    print("Check Github Repo Credentials")
+                    credentials = params.docker_credentials
+                    if(params.docker_repo.contains("cherpin")){
+                        github_credentials = "4da91a3b-816d-48c0-8aa0-ce7e11e13243"
+                    }
+                    print("Docker Credentials set to: ${github_credentials}")
                 }
             }
         }
@@ -63,7 +77,7 @@ pipeline{
                 script {
                 git branch: params.branch, 
                     url: params.github_repo,
-                    credentialsId: credentials
+                    credentialsId: github_credentials
                 }
             }
         }
@@ -72,7 +86,7 @@ pipeline{
                 script {
                     sh "ls"
                     def tag = "${params.branch}-${env.BUILD_NUMBER}"
-                    withCredentials([usernamePassword(credentialsId: ${credentials}, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: ${docker_credentials}, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                     }
                     sh """
