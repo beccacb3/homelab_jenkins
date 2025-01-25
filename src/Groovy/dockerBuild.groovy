@@ -56,7 +56,7 @@ pipeline{
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                     }
                     sh """
-                        cd \$(dirname ${params.dockerfile_path}) && docker build -f ${params.dockerfile_path} . -t docker.io/cherpin/${params.image_name}:${tag}
+                        cd \$(dirname ${params.dockerfile_path}) && docker build -f \$(basename ${params.dockerfile_path}) . -t docker.io/cherpin/${params.image_name}:${tag}
                     """
                 }
             }
