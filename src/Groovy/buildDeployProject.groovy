@@ -92,18 +92,18 @@ pipeline {
             }
         }
     }
-    // post {
-    //     success {
-    //         echo 'Deployment successful!'
-    //         mail to: 'caleb.herpin@gmail.com,beccacb3@gmail.com,david@herpin.net',
-    //              subject: "Jenkins Pipeline: Success - ${env.JOB_NAME} Build #${env.BUILD_NUMBER}",
-    //              body: "The Jenkins pipeline for ${env.JOB_NAME} build #${env.BUILD_NUMBER} succeeded.\n\nCheck it here: ${env.BUILD_URL}"
-    //     }
-    //     failure {
-    //         echo 'Deployment failed!'
-    //         mail to: 'caleb.herpin@gmail.com,beccacb3@gmail.com,david@herpin.net',
-    //              subject: "Jenkins Pipeline: Failure - ${env.JOB_NAME} Build #${env.BUILD_NUMBER}",
-    //              body: "The Jenkins pipeline for ${env.JOB_NAME} build #${env.BUILD_NUMBER} failed.\n\nCheck it here: ${env.BUILD_URL}"
-    //     }
-    // }
+    post {
+        success {
+            echo 'Deployment successful!'
+            mail to: 'caleb.herpin@gmail.com,beccacb3@gmail.com,david@herpin.net',
+                 subject: "Jenkins Pipeline: Success - ${env.JOB_NAME} Build #${env.BUILD_NUMBER}",
+                 body: "The Jenkins pipeline for ${env.JOB_NAME} build #${env.BUILD_NUMBER} succeeded.\n\nCheck it here: ${env.BUILD_URL}"
+        }
+        failure {
+            echo 'Deployment failed!'
+            mail to: 'caleb.herpin@gmail.com,beccacb3@gmail.com,david@herpin.net',
+                 subject: "Jenkins Pipeline: Failure - ${env.JOB_NAME} Build #${env.BUILD_NUMBER}",
+                 body: "The Jenkins pipeline for ${env.JOB_NAME} build #${env.BUILD_NUMBER} failed.\n\nCheck it here: ${env.BUILD_URL}"
+        }
+    }
 }
