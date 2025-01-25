@@ -38,17 +38,21 @@ pipeline {
         //     }
         // }
         stage('Call Docker Image Pipeline') {
-            build job: 'docker_image_build', // Name of the downstream pipeline (Pipeline B)
-                parameters: [
-                    string(name: 'github_repo', value: "https://github.com/cherpin00/compass-scraping"),
-                    string(name: 'branch', value: "development"),
-                    string(name: 'image_name', value: "realestate-app"),
-                    string(name: 'tag', value: "test"),
-                    string(name: 'docker_credentials', value: ""),
-                    string(name: 'github_credentials', value: ""),
-                    string(name: 'dockerfile_path', value: "frontend/Dockerfile"),
-                    string(name: 'docker_repo', value: "docker.io/cherpin"),
-                ]
+            steps {
+                script{
+                    build job: 'docker_image_build', // Name of the downstream pipeline (Pipeline B)
+                        parameters: [
+                            string(name: 'github_repo', value: "https://github.com/cherpin00/compass-scraping"),
+                            string(name: 'branch', value: "development"),
+                            string(name: 'image_name', value: "realestate-app"),
+                            string(name: 'tag', value: "test"),
+                            string(name: 'docker_credentials', value: ""),
+                            string(name: 'github_credentials', value: ""),
+                            string(name: 'dockerfile_path', value: "frontend/Dockerfile"),
+                            string(name: 'docker_repo', value: "docker.io/cherpin"),
+                        ]
+                }
+            }
         }
         stage('Deploy to Kubernetes') {
             steps {
