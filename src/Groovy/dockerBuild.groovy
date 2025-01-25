@@ -66,7 +66,7 @@ pipeline{
                     print("Check Github Repo Credentials")
                     credentials = params.docker_credentials
                     if(params.docker_repo.contains("cherpin")){
-                        github_credentials = "4da91a3b-816d-48c0-8aa0-ce7e11e13243"
+                        github_credentials = "a453e044-6a68-4edb-a82e-b26ffe9054af"
                     }
                     print("Docker Credentials set to: ${github_credentials}")
                 }
