@@ -34,7 +34,7 @@ pipeline {
                     print(env.JOB_NAME)
                     // Load the configuration dynamically based on the pipeline name
                     def config = projectConfigs(env.JOB_NAME.split('_')[0])
-                    print("config in build ${buildDeploy}")
+                    print("config in build ${config}")
 
                     // Use the configuration in your pipeline
                     github_repo = config.github_repo
