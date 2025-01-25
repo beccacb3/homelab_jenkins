@@ -25,8 +25,9 @@ pipeline {
             steps {
                 script {
                     print(env.JOB_NAME)
+                    def split_JOB_NAME = env.JOB_NAME.split('_')
                     // Load the configuration dynamically based on the pipeline name
-                    def config = projectConfigs(env.JOB_NAME.split('_')[0])
+                    def config = projectConfigs(split_JOB_NAME[0])
                     print("config in build ${config}")
 
                     // Use the configuration in your pipeline
@@ -39,7 +40,7 @@ pipeline {
                     github_credentials = config.github_credentials
                     docker_credentials = config.docker_credentials
 
-                    if(env.JOB_NAME.split[2] == "dev"){
+                    if(split_JOB_NAME[2] == "dev"){
                         app_name = "${app_name}-dev"
                         image_name = "${image_name}-dev"
                         branch = "development"
