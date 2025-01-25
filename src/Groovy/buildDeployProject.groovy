@@ -1,6 +1,6 @@
 def github_repo = "https://github.com/cherpin00/compass-scraping"
 def branch = "development"
-def image_name = "realestate-app"
+def image_name = "realestate-app-dev"
 def tag = "test"
 def docker_credentials = ""
 def github_credentials = ""
@@ -16,11 +16,11 @@ pipeline {
             defaultContainer 'build-and-deploy'
         }
     }
-    environment {
-        IMAGE_NAME = 'realestate-app'
-        BRANCH = 'development'
-        TAG = "${env.BRANCH}-${env.BUILD_NUMBER}"
-    }
+    // environment {
+    //     IMAGE_NAME = 'realestate-app'
+    //     BRANCH = 'development'
+    //     TAG = "${env.BRANCH}-${env.BUILD_NUMBER}"
+    // }
     stages {
         // stage('Checkout') {
         //     steps {
@@ -75,11 +75,11 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-		        sh '''
+		        sh """
                 kubectl set image deployment/react-app \
-                    react-app=cherpin/$IMAGE_NAME:$TAG -n realestate-app-dev
+                    react-app=cherpin/${image_name}:${tag} -n realestate-app-dev
                 kubectl rollout status deployment/react-app -n realestate-app-dev
-                '''
+                """
                 }
             }
         }
