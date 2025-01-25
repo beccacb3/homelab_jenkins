@@ -21,8 +21,9 @@ pipeline {
         stage('Load Config') {
             steps {
                 script {
+                    print(env.JOB_NAME)
                     // Load the configuration dynamically based on the pipeline name
-                    def config = projectConfigs.getConfig(env.JOB_NAME.split('_')[1])
+                    def config = projectConfigs(env.JOB_NAME.split('_')[1])
                     
                     // Use the configuration in your pipeline
                     def github_repo = config.github_repo
