@@ -76,9 +76,9 @@ pipeline {
             steps {
                 script {
 		        sh """
-                    kubectl set image deployment/${project_name} \
-                    ${app_name}=${docker_repo}/${image_name}:${tag} -n ${app_name}
-                    kubectl rollout status deployment/${project_name} -n ${app_name}
+                kubectl set image deployment/${project_name} \
+                    ${project_name}=${github_repo}/${image_name}:${tag} -n ${app_name}
+                kubectl rollout status deployment/${project_name} -n ${app_name}
                 """
                 }
             }
