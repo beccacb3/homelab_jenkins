@@ -7,43 +7,43 @@ pipeline{
             defaultContainer 'shell'
         }
     }
-    // environment {
-    //     IMAGE_NAME = 'realestate-app'
-    //     BRANCH = 'development'
-    //     TAG = "${env.BRANCH}-${env.BUILD_NUMBER}"
-    // }
     parameters {
         string(
             name: 'image_name',
             defaultValue: params.image_name ?: '',
-            description: ''
+            description: 'Name of image to be created'
         )
         string(
             name: 'branch',
             defaultValue: params.branch ?: '',
-            description: ''
+            description: 'Branch to build the dockerfile from'
         )
         string(
             name: 'tag',
             defaultValue: params.tag ?: '',
-            description: ''
+            description: 'Tag for the docker image'
         )
         string(
-            name: 'repo_url',
-            defaultValue: params.repo_url ?: '',
-            description: ''
+            name: 'github_repo',
+            defaultValue: params.github_repo ?: '',
+            description: 'Github repository url hosting dockerfile'
         )
         string(
             name: 'credentials',
             defaultValue: params.credentials ?: '',
-            description: ''
+            description: 'Credentials for pushing to dockerhub'
+        )
+        string(
+            name: 'dockerfile_path',
+            defaultValue: params.dockerfile_path ?: '';
+            description: 'Path to dockerfile in the github repository'
         )
     }
     stages{
         stage('Checkout') {
             steps {
                 git branch: params.branch, 
-                    url: params.repo_url,
+                    url: params.github_repo,
                     credentialsId: params.credentials
             }
         }
@@ -54,7 +54,7 @@ pipeline{
                     withCredentials([usernamePassword(credentialsId: 'a453e044-6a68-4edb-a82e-b26ffe9054af', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                     }
-                    sh "cd frontend; docker build . -t docker.io/cherpin/${params.image_name}:${tag}"
+                    sh "docker build -f ${params.dockerfile_path} . -t docker.io/cherpin/${params.image_name}:${tag}"
                 }
             }
         }
