@@ -11,6 +11,14 @@
 
 def docker_credentials = ""
 def github_credentials = ""
+def github_repo = ""
+def branch = ""
+def image_name = ""
+def tag = ""
+def dockerfile_path = ""
+def docker_repo = ""
+def project_name = ""
+def app_name = ""
 
 pipeline {
     agent {
@@ -26,16 +34,17 @@ pipeline {
                     print(env.JOB_NAME)
                     // Load the configuration dynamically based on the pipeline name
                     def config = projectConfigs(env.JOB_NAME.split('_')[0])
-                    
+                    print("config in build ${buildDeploy}")
+
                     // Use the configuration in your pipeline
-                    def github_repo = config.github_repo
-                    def branch = config.branch
-                    def image_name = config.image_name
-                    def tag = config.tag
-                    def dockerfile_path = config.dockerfile_path
-                    def docker_repo = config.docker_repo
-                    def project_name = config.project_name
-                    def app_name = config.app_name
+                    github_repo = config.github_repo
+                    branch = config.branch
+                    image_name = config.image_name
+                    tag = config.tag
+                    dockerfile_path = config.dockerfile_path
+                    docker_repo = config.docker_repo
+                    project_name = config.project_name
+                    app_name = config.app_name
 
                     //Docker information
                     echo "Building Docker image ${image_name}:${tag} from ${github_repo} on branch ${branch}"
