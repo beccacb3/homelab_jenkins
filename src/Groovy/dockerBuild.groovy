@@ -46,8 +46,12 @@ pipeline{
     }
     stages{
         stage('Check known docker repository for credentials'){
-            if(params.docker_repo.contains("docker.io/cherpin")){
-                params.credentials = "a453e044-6a68-4edb-a82e-b26ffe9054af"
+            steps{
+                script{
+                    if(params.docker_repo.contains("docker.io/cherpin")){
+                        params.credentials = "a453e044-6a68-4edb-a82e-b26ffe9054af"
+                    }
+                }
             }
         }
         stage('Checkout') {
