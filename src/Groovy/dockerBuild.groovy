@@ -60,7 +60,7 @@ pipeline{
         }
         stage('Docker Push') {
             steps {
-                sh "docker push docker.io/cherpin/${image_names}:${tag}"
+                sh "docker push docker.io/cherpin/${image_name}:${tag}"
             }
         }
     }
