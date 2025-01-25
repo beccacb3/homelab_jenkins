@@ -57,7 +57,7 @@ pipeline {
                         branch = "master"
                     }
 
-                    tag = "${env.BRANCH}-${env.BUILD_NUMBER}"
+                    tag = "${split_JOB_NAME[0]}_${branch}_${env.BUILD_NUMBER}"
 
                     echo "Building Docker image ${image_name}:${tag} from ${github_repo} on branch ${branch}"
                 }
@@ -99,17 +99,17 @@ pipeline {
         }
     }
     post {
-        success {
-            echo 'Deployment successful!'
-            mail to: 'caleb.herpin@gmail.com,beccacb3@gmail.com,david@herpin.net',
-                 subject: "Jenkins Pipeline: Success - ${env.JOB_NAME} Build #${env.BUILD_NUMBER}",
-                 body: "The Jenkins pipeline for ${env.JOB_NAME} build #${env.BUILD_NUMBER} succeeded.\n\nCheck it here: ${env.BUILD_URL}"
-        }
-        failure {
-            echo 'Deployment failed!'
-            mail to: 'caleb.herpin@gmail.com,beccacb3@gmail.com,david@herpin.net',
-                 subject: "Jenkins Pipeline: Failure - ${env.JOB_NAME} Build #${env.BUILD_NUMBER}",
-                 body: "The Jenkins pipeline for ${env.JOB_NAME} build #${env.BUILD_NUMBER} failed.\n\nCheck it here: ${env.BUILD_URL}"
-        }
+        // success {
+        //     echo 'Deployment successful!'
+        //     mail to: 'caleb.herpin@gmail.com,beccacb3@gmail.com,david@herpin.net',
+        //          subject: "Jenkins Pipeline: Success - ${env.JOB_NAME} Build #${env.BUILD_NUMBER}",
+        //          body: "The Jenkins pipeline for ${env.JOB_NAME} build #${env.BUILD_NUMBER} succeeded.\n\nCheck it here: ${env.BUILD_URL}"
+        // }
+        // failure {
+        //     echo 'Deployment failed!'
+        //     mail to: 'caleb.herpin@gmail.com,beccacb3@gmail.com,david@herpin.net',
+        //          subject: "Jenkins Pipeline: Failure - ${env.JOB_NAME} Build #${env.BUILD_NUMBER}",
+        //          body: "The Jenkins pipeline for ${env.JOB_NAME} build #${env.BUILD_NUMBER} failed.\n\nCheck it here: ${env.BUILD_URL}"
+        // }
     }
 }
