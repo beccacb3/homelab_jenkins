@@ -18,24 +18,37 @@ pipeline {
                     credentialsId: '4da91a3b-816d-48c0-8aa0-ce7e11e13243'
             }
         }
-        stage('Docker Login') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'a453e044-6a68-4edb-a82e-b26ffe9054af', 
-                                                  usernameVariable: 'DOCKER_USERNAME', 
-                                                  passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'podman login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io'
-                }
-            }
-        }
-        stage('Docker Build') {
-            steps {
-                sh 'cd frontend; podman build . -t docker.io/cherpin/$IMAGE_NAME:$TAG'
-            }
-        }
-        stage('Docker Push') {
-            steps {
-                sh 'podman push docker.io/cherpin/$IMAGE_NAME:$TAG'
-            }
+        // stage('Docker Login') {
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'a453e044-6a68-4edb-a82e-b26ffe9054af', 
+        //                                           usernameVariable: 'DOCKER_USERNAME', 
+        //                                           passwordVariable: 'DOCKER_PASSWORD')]) {
+        //             sh 'podman login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io'
+        //         }
+        //     }
+        // }
+        // stage('Docker Build') {
+        //     steps {
+        //         sh 'cd frontend; podman build . -t docker.io/cherpin/$IMAGE_NAME:$TAG'
+        //     }
+        // }
+        // stage('Docker Push') {
+        //     steps {
+        //         sh 'podman push docker.io/cherpin/$IMAGE_NAME:$TAG'
+        //     }
+        // }
+        stage('Call Docker Image Pipeline') {
+            build job: 'docker_image_build', // Name of the downstream pipeline (Pipeline B)
+                parameters: [
+                    string(name: 'github_repo', value: "https://github.com/cherpin00/compass-scraping"),
+                    string(name: 'branch', value: "development"),
+                    string(name: 'image_name', value: "realestate-app"),
+                    string(name: 'tag', value: "test"),
+                    string(name: 'docker_credentials', value: ""),
+                    string(name: 'github_credentials', value: ""),
+                    string(name: 'dockerfile_path', value: "frontend/Dockerfile"),
+                    string(name: 'docker_repo', value: "docker.io/cherpin"),
+                ]
         }
         stage('Deploy to Kubernetes') {
             steps {
