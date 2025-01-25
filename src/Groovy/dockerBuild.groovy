@@ -9,9 +9,9 @@ pipeline{
     }
     parameters {
         string(
-            name: 'image_name',
-            defaultValue: params.image_name ?: '',
-            description: 'Name of image to be created'
+            name: 'github_repo',
+            defaultValue: params.github_repo ?: '',
+            description: 'Github repository url hosting dockerfile'
         )
         string(
             name: 'branch',
@@ -19,14 +19,14 @@ pipeline{
             description: 'Branch to build the dockerfile from'
         )
         string(
+            name: 'image_name',
+            defaultValue: params.image_name ?: '',
+            description: 'Name of image to be created'
+        )
+        string(
             name: 'tag',
             defaultValue: params.tag ?: '',
             description: 'Tag for the docker image'
-        )
-        string(
-            name: 'github_repo',
-            defaultValue: params.github_repo ?: '',
-            description: 'Github repository url hosting dockerfile'
         )
         string(
             name: 'credentials',
@@ -35,7 +35,7 @@ pipeline{
         )
         string(
             name: 'dockerfile_path',
-            defaultValue: params.dockerfile_path ?: '';
+            defaultValue: params.dockerfile_path ?: '',
             description: 'Path to dockerfile in the github repository'
         )
     }
