@@ -1,24 +1,14 @@
 @Library('homelab_jenkins@main') _ 
 
-// def github_repo = "https://github.com/cherpin00/compass-scraping"
-// def branch = "development"
-// def image_name = "realestate-app-dev"
-// def tag = "test"
-// def dockerfile_path = "frontend/Dockerfile"
-// def docker_repo = "docker.io/cherpin"
-// def project_name = "react-app"
-// def app_name = "realestate-app-dev"
-
-def docker_credentials = ""
-def github_credentials = ""
 def github_repo = ""
 def branch = ""
 def image_name = ""
-def tag = ""
 def dockerfile_path = ""
 def docker_repo = ""
 def project_name = ""
 def app_name = ""
+def github_credentials = ""
+def docker_credentials = ""
 
 pipeline {
     agent {
@@ -26,6 +16,9 @@ pipeline {
             label 'build-and-deploy'
             defaultContainer 'build-and-deploy'
         }
+    }
+    environment {
+        tag = "${env.BRANCH}-${env.BUILD_NUMBER}"
     }
     stages {
         stage('Load Config') {
@@ -38,16 +31,25 @@ pipeline {
 
                     // Use the configuration in your pipeline
                     github_repo = config.github_repo
-                    branch = config.branch
                     image_name = config.image_name
-                    tag = config.tag
                     dockerfile_path = config.dockerfile_path
                     docker_repo = config.docker_repo
                     project_name = config.project_name
                     app_name = config.app_name
+                    github_credentials = config.github_credentials
+                    docker_credentials = config.docker_credentials
+
+                    if(env.JOB_NAME.split[2] == "dev"){
+                        app_name = "${app_name}-dev"
+                        image_name = "${image_name}-dev"
+                        branch = "development"
+                    }
+                    else{
+                        branch = main
+                    }
 
                     //Docker information
-                    echo "Building Docker image ${image_name}:${tag} from ${github_repo} on branch ${branch}"
+                    echo "Building Docker image ${image_name}:${env.tag} from ${github_repo} on branch ${branch}"
                 }
             }
         }
@@ -59,7 +61,7 @@ pipeline {
                             string(name: 'github_repo', value: github_repo),
                             string(name: 'branch', value: branch),
                             string(name: 'image_name', value: image_name),
-                            string(name: 'tag', value: tag),
+                            string(name: 'tag', value: env.tag),
                             string(name: 'docker_credentials', value: ""),
                             string(name: 'github_credentials', value: ""),
                             string(name: 'dockerfile_path', value: dockerfile_path),
@@ -73,7 +75,7 @@ pipeline {
                 script {
 		        sh """
                 kubectl set image deployment/${project_name} \
-                    ${project_name}=cherpin/${image_name}:${tag} -n ${app_name}
+                    ${project_name}=cherpin/${image_name}:$tag -n ${app_name}
                 kubectl rollout status deployment/${project_name} -n ${app_name}
                 """
                 }
