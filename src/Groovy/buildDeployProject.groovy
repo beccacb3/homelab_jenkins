@@ -6,6 +6,8 @@ def docker_credentials = ""
 def github_credentials = ""
 def dockerfile_path = "frontend/Dockerfile"
 def docker_repo = "docker.io/cherpin"
+def project_name = "react-app"
+def app_name = "realestate-app-dev"
 
 pipeline {
     agent {
@@ -73,11 +75,11 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    sh """
-                        kubectl set image deployment/${project_name} \
-                        ${app_name}=${github_repo}/$IMAGE_NAME:$TAG -n ${app_name}
-                        kubectl rollout status deployment/${project_name} -n ${app_name}
-                    """
+		        sh """
+                    kubectl set image deployment/${project_name} \
+                    ${app_name}=${docker_repo}/${image_name}:${tag} -n ${app_name}
+                    kubectl rollout status deployment/${project_name} -n ${app_name}
+                """
                 }
             }
         }
