@@ -54,7 +54,7 @@ pipeline{
                     withCredentials([usernamePassword(credentialsId: 'a453e044-6a68-4edb-a82e-b26ffe9054af', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                     }
-                    sh "cd frontend; docker build . -t docker.io/cherpin/${params.image_name}:$tag"
+                    sh "cd frontend; docker build . -t docker.io/cherpin/${params.image_name}:${tag}"
                 }
             }
         }
