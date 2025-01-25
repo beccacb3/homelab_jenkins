@@ -38,6 +38,11 @@ pipeline{
             defaultValue: params.dockerfile_path ?: '',
             description: 'Path to dockerfile in the github repository'
         )
+        string(
+            name: 'docker_repo',
+            defaultValue: params.docker_repo ?: '',
+            description: 'Repository to upload docker image to'
+        )
     }
     stages{
         stage('Checkout') {
@@ -56,14 +61,14 @@ pipeline{
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                     }
                     sh """
-                        cd \$(dirname ${params.dockerfile_path}) && docker build -f \$(basename ${params.dockerfile_path}) . -t docker.io/cherpin/${params.image_name}:${params.tag}
+                        cd \$(dirname ${params.dockerfile_path}) && docker build -f \$(basename ${params.dockerfile_path}) . -t ${params.docker_repo}/${params.image_name}:${params.tag}
                     """
                 }
             }
         }
         stage('Docker Push') {
             steps {
-                sh "docker push docker.io/cherpin/${image_name}:${params.tag}"
+                sh "docker push ${params.docker_repo}/${image_name}:${params.tag}"
             }
         }
     }
