@@ -17,6 +17,13 @@ pipeline {
             defaultContainer 'build-and-deploy'
         }
     }
+    parameters {
+        string(
+            name: 'branch',
+            defaultValue: params.github_repo ?: '',
+            description: 'Branch if it differs from development or master'
+        )
+    }
     environment {
         tag = "${env.BRANCH}-${env.BUILD_NUMBER}"
     }
@@ -45,7 +52,10 @@ pipeline {
                         image_name = "${image_name}-dev"
                         branch = "development"
                     }
-                    else{
+                    if(params.branch != ''){
+                        branch = params.branch
+                    }
+                    else {
                         branch = "master"
                     }
 
