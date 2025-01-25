@@ -86,7 +86,7 @@ pipeline{
                 script {
                     sh "ls"
                     def tag = "${params.branch}-${env.BUILD_NUMBER}"
-                    withCredentials([usernamePassword(credentialsId: ${docker_credentials}, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: docker_credentials, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                     }
                     sh """
