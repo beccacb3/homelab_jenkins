@@ -1,3 +1,12 @@
+def github_repo = "https://github.com/cherpin00/compass-scraping"
+def branch = "development"
+def image_name = "realestate-app"
+def tag = "test"
+def docker_credentials = ""
+def github_credentials = ""
+def dockerfile_path = "frontend/Dockerfile"
+def docker_repo = "docker.io/cherpin"
+
 pipeline {
     agent {
         kubernetes {
@@ -37,30 +46,39 @@ pipeline {
         //         sh 'podman push docker.io/cherpin/$IMAGE_NAME:$TAG'
         //     }
         // }
-        stage('Call Docker Image Pipeline') {
+        stage('Configure Project Parameters') {
+            steps {
+                script {
+                    github_repo 
+                }
+            }
+        }
+        stage('Call Docker Build/Upload Pipeline') {
             steps {
                 script{
                     build job: 'docker_image_build', // Name of the downstream pipeline (Pipeline B)
                         parameters: [
-                            string(name: 'github_repo', value: "https://github.com/cherpin00/compass-scraping"),
-                            string(name: 'branch', value: "development"),
-                            string(name: 'image_name', value: "realestate-app"),
-                            string(name: 'tag', value: "test"),
+                            string(name: 'github_repo', value: github_repo),
+                            string(name: 'branch', value: branch),
+                            string(name: 'image_name', value: image_name),
+                            string(name: 'tag', value: tag),
                             string(name: 'docker_credentials', value: ""),
                             string(name: 'github_credentials', value: ""),
-                            string(name: 'dockerfile_path', value: "frontend/Dockerfile"),
-                            string(name: 'docker_repo', value: "docker.io/cherpin"),
+                            string(name: 'dockerfile_path', value: dockerfile_path),
+                            string(name: 'docker_repo', value: docker_repo),
                         ]
                 }
             }
         }
         stage('Deploy to Kubernetes') {
             steps {
-                sh '''
-                kubectl set image deployment/react-app \
-                    react-app=cherpin/$IMAGE_NAME:$TAG -n realestate-app-dev
-                kubectl rollout status deployment/react-app -n realestate-app-dev
-                '''
+                script {
+                    sh """
+                        kubectl set image deployment/${project_name} \
+                        ${app_name}=${github_repo}/$IMAGE_NAME:$TAG -n ${app_name}
+                        kubectl rollout status deployment/${project_name} -n ${app_name}
+                    """
+                }
             }
         }
     }
