@@ -63,7 +63,7 @@ pipeline{
                 script {
                 git branch: params.branch, 
                     url: params.github_repo,
-                    credentialsId: $credentials
+                    credentialsId: credentials
                 }
             }
         }
