@@ -46,10 +46,9 @@ pipeline {
                         branch = "development"
                     }
                     else{
-                        branch = main
+                        branch = "master"
                     }
 
-                    //Docker information
                     echo "Building Docker image ${image_name}:${env.tag} from ${github_repo} on branch ${branch}"
                 }
             }
