@@ -1,5 +1,5 @@
 // vars/loadConfig.groovy
-def call(String pipelineName) {
+def getConfig(String pipelineName) {
     def config = [:]
     
     // Define your configurations (these could be in JSON or YAML files in your repo)
