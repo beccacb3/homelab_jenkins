@@ -15,12 +15,11 @@ pipeline {
         )
     }
     stages {
-        stage('Drain deployment') {
+        stage('Drain Service') {
             steps {
                 script {
                 	sh """
-						podName=\$(kubectl --namespace matrix get pods | grep matrix | grep Running | awk '{print \$1}')
-						kubectl --namespace matrix label pod \${podName} k8s-app=blocked --overwrite
+                		kubectl patch service matrix -n matrix --type='json' -p='[{"op": "replace", "path": "/spec/selector/k8s-app", "value": "drained"}]'
 						sleep 60 # Wait a minute to make sure any database writes are done
                 	"""
                 }
@@ -43,8 +42,7 @@ pipeline {
     	always {
 			script {
 				sh """
-					podName=\$(kubectl --namespace matrix get pods | grep matrix | grep Running | awk '{print \$1}')
-					kubectl --namespace matrix label pod \${podName} k8s-app=matrix --overwrite # TODO: Make sure this throws an error if it fails
+					kubectl patch service matrix -n matrix --type='json' -p='[{"op": "replace", "path": "/spec/selector/k8s-app", "value": "matrix"}]'
 				"""
 			}
     	}
