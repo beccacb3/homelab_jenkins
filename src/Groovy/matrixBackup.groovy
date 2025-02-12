@@ -36,15 +36,6 @@ pipeline {
                 }
             }
         }
-        stage('Scale up deployment') {
-            steps {
-                script {
-                	sh """
-                		kubectl --namespace matrix scale deployment matrix --replicas=1
-                	"""
-                }
-            }
-        }
         stage('Wait for app to be ready') {
             steps {
                 script {
@@ -56,6 +47,13 @@ pipeline {
         }
     }
     post {
+    	always {
+			script {
+				sh """
+					kubectl --namespace matrix scale deployment matrix --replicas=1
+				"""
+			}
+    	}
         success {
             echo 'Backup successful!'
             mail to: 'caleb.herpin@gmail.com,beccacb3@gmail.com',
