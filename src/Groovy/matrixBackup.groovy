@@ -15,11 +15,13 @@ pipeline {
         )
     }
     stages {
-        stage('Scale down deployment') {
+        stage('Drain deployment') {
             steps {
                 script {
                 	sh """
-                		kubectl --namespace matrix scale deployment matrix --replicas=0
+						podName=\$(kubectl --namespace matrix get pods | grep matrix | awk '{print \$1}')
+						kubectl label pod \${podName} k8s-app=blocked --overwrite
+						sleep 60
                 	"""
                 }
             }
@@ -36,21 +38,13 @@ pipeline {
                 }
             }
         }
-        stage('Wait for app to be ready') {
-            steps {
-                script {
-                	sh """
-                		kubectl wait --for=condition=available deployment/matrix --timeout=3600s	
-                	"""
-                }
-            }
-        }
     }
     post {
     	always {
 			script {
 				sh """
-					kubectl --namespace matrix scale deployment matrix --replicas=1
+					podName=\$(kubectl --namespace matrix get pods | grep matrix | awk '{print \$1}')
+					kubectl label pod \${podName} k8s-app=matrix --overwrite
 				"""
 			}
     	}
