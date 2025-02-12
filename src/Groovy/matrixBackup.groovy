@@ -19,9 +19,9 @@ pipeline {
             steps {
                 script {
                 	sh """
-                		volumeMount=$(kubectl --namespace matrix get deployment matrix -o json | jq -r '.spec.template.spec.volumes[] | select(has("persistentVolumeClaim")).name') 
-                		podName=$(kubectl --namespace matrix get pods | grep matrix | awk '{print $1}')
-                		dataPath=$(kubectl --namespace matrix get deployment matrix -o json | jq -r ".spec.template.spec.containers[].volumeMounts[] | select(.name == \"${volumeMount}\").mountPath")
+                		volumeMount=\$(kubectl --namespace matrix get deployment matrix -o json | jq -r '.spec.template.spec.volumes[] | select(has("persistentVolumeClaim")).name') 
+                		podName=\$(kubectl --namespace matrix get pods | grep matrix | awk '{print \$1}')
+                		dataPath=\$(kubectl --namespace matrix get deployment matrix -o json | jq -r ".spec.template.spec.containers[].volumeMounts[] | select(.name == \"${volumeMount}\").mountPath")
                 		kubectl --namespace matrix cp ${podName}:${dataPath} data.bak
                 	"""
                 }
