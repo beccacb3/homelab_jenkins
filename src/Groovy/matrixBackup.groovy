@@ -20,7 +20,7 @@ pipeline {
                 script {
                 	sh """
 						podName=\$(kubectl --namespace matrix get pods | grep matrix | awk '{print \$1}')
-						kubectl label pod \${podName} k8s-app=blocked --overwrite
+						kubectl --namespace matrix label pod \${podName} k8s-app=blocked --overwrite
 						sleep 60
                 	"""
                 }
@@ -44,7 +44,7 @@ pipeline {
 			script {
 				sh """
 					podName=\$(kubectl --namespace matrix get pods | grep matrix | awk '{print \$1}')
-					kubectl label pod \${podName} k8s-app=matrix --overwrite
+					kubectl --namespace matrix label pod \${podName} k8s-app=matrix --overwrite
 				"""
 			}
     	}
