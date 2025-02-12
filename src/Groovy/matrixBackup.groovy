@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                 	sh """
-						podName=\$(kubectl --namespace matrix get pods | grep matrix | awk '{print \$1}')
+						podName=\$(kubectl --namespace matrix get pods | grep matrix | grep Running | awk '{print \$1}')
 						kubectl --namespace matrix label pod \${podName} k8s-app=blocked --overwrite
 						sleep 60 # Wait a minute to make sure any database writes are done
                 	"""
@@ -31,7 +31,7 @@ pipeline {
                 script {
                 	sh """
                 		volumeMount=\$(kubectl --namespace matrix get deployment matrix -o json | jq -r '.spec.template.spec.volumes[] | select(has("persistentVolumeClaim")).name') 
-                		podName=\$(kubectl --namespace matrix get pods | grep matrix | awk '{print \$1}')
+                		podName=\$(kubectl --namespace matrix get pods | grep matrix | grep Running | awk '{print \$1}')
                 		dataPath=\$(kubectl --namespace matrix get deployment matrix -o json | jq -r ".spec.template.spec.containers[].volumeMounts[] | select(.name == \\"\${volumeMount}\\").mountPath")
                 		kubectl --namespace matrix cp \${podName}:\${dataPath} data.bak
                 	"""
@@ -43,7 +43,7 @@ pipeline {
     	always {
 			script {
 				sh """
-					podName=\$(kubectl --namespace matrix get pods | grep matrix | awk '{print \$1}')
+					podName=\$(kubectl --namespace matrix get pods | grep matrix | grep Running | awk '{print \$1}')
 					kubectl --namespace matrix label pod \${podName} k8s-app=matrix --overwrite # TODO: Make sure this throws an error if it fails
 				"""
 			}
