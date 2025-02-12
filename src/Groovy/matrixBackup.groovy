@@ -18,7 +18,7 @@ pipeline {
         stage('Load Config') {
             steps {
                 script {
-					echo "Hello World!"
+					kubectl get pods -n matrix
                 }
             }
         }
